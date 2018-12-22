@@ -1,7 +1,10 @@
-from r3patch import patch
+from r3patch import *
 import mmap
 from shutil import copyfile
-from tkinter import *
+from tkinter import ttk
+
+from controls import *
+
 ''' 
 510p starts patch (byte 0), preamble is 32 bytes
 
@@ -175,31 +178,101 @@ Patch is 2336 bytes long
 copyfile('init.r3l', 'rand.r3l')
 f = open('rand.r3l', 'r+b')
 mm = mmap.mmap(f.fileno(), 0)
-offset = 192
-patchsize = 2336
-timbre2 = 228
 
-def rand_all(prog):
-    print(len(prog))
-    for p in prog:
-        print(p.number)
-        p.randomize()
-#        print(p.params['name']['value'],p.params['voicemode']['value'])  
-        p.write(mm)
+def save_file():
+    f.close()
+    exit(0)
 
-program = []
-for i in range(128):
-    program.append(patch(i))
+def rand_all():
+    program = [0*i for i in range(128)]
+    for n in range(128):
+        program[n] = Patch(n)
+        print(program[n].name.value)
+        for timbre in [1,2]:
+            program[n].randomize()
+            program[n].write(mm, timbre)
+    save_file()
 
-
-gui_patch = patch(-1)
 
 gui = Tk()
-gui.geometry('600x600')
+gui.geometry('1300x750')
 gui.title('R3 Randomizer')
 
-rand_button = Button(gui, text='Randomize', command=lambda: rand_all(program))
-rand_button.pack()
+nb = ttk.Notebook(gui)
+slider_tab = ttk.Frame(nb)
+checkbox_tabs = []
+
+nb.add(slider_tab, text="Sliders")
+nb.pack(fill=BOTH, expand=1)
+
+gui_patch = Patch(-1)
+slider_cols = []
+slider_frames = []
+sliders_min = []
+sliders_max = []
+slider_frame = Frame(slider_tab)
+label_frames = []
+labels = []
+pFrames = []
+num_slider_rows = 12
+
+checkbox_tabs.append(ttk.Frame(nb))
+nb.add(checkbox_tabs[-1], text="Checkboxes " + str(len(checkbox_tabs) - 1))
+
+checkbox_cols = []
+checkbox_frames = []
+checkboxes = []
+num_checkbox_rows = 1
+
+check_vars = []
+max_slide_vars = []
+min_slide_vars = []
+
+slider_sets = []
+checkbanks = []
+
+
+for param in gui_patch.parameters:
+
+
+    if param.control == 'slider':
+        if len(slider_frames)%num_slider_rows == 0:
+            slider_cols.append(Frame(slider_frame))
+
+        pFrames.append(Frame(slider_cols[-1], relief=GROOVE, bd=2))
+
+        slider_frames.append(Frame(pFrames[-1]))
+
+        slider_sets.append(param.add_slider(slider_frames[-1]))
+
+        label_frames.append(Frame(pFrames[-1]))
+
+        labels.append(Label(label_frames[-1], text=param.label))
+
+        slider_frames[-1].pack(side=TOP)
+
+        label_frames[-1].pack(side=TOP)
+
+        labels[-1].pack(side=TOP)
+
+        slider_cols[-1].pack(side=LEFT)
+
+        pFrames[-1].pack()
+
+        # param.control = slider_sets[-1]
+
+    elif param.control == 'checkbox':
+        if param.label in ('LFO 1 Wave A', 'DWGS Type', 'Effect 1', 'V. Patch 1 Destination'):
+            checkbox_tabs.append(ttk.Frame(nb))
+            nb.add(checkbox_tabs[-1], text="Checkboxes " + str(len(checkbox_tabs) - 1))
+        if len(checkbox_frames) % num_checkbox_rows == 0:
+            checkbox_cols.append(Frame(checkbox_tabs[-1], relief=GROOVE, bd=2))
+            checkbanks.append(param.add_checkbank(checkbox_cols[-1]))
+
+
+slider_frame.pack(side=TOP)
+rand_button = Button(gui, text='Randomize', command=lambda: rand_all())
+rand_button.pack(side=BOTTOM)
 
 gui.mainloop()
 
