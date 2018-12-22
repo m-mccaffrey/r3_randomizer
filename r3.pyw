@@ -259,7 +259,6 @@ for param in gui_patch.parameters:
 
         pFrames[-1].pack()
 
-        # param.control = slider_sets[-1]
 
     elif param.control == 'checkbox':
         if param.label in ('LFO 1 Wave A', 'DWGS Type', 'Effect 1', 'V. Patch 1 Destination'):
@@ -275,13 +274,3 @@ rand_button = Button(gui, text='Randomize', command=lambda: rand_all())
 rand_button.pack(side=BOTTOM)
 
 gui.mainloop()
-
-#mm[224:232] = patch1.params['name']['value']
-
-#for parameter in patch1:
-#    random['parameter'] = patch[parameter]
-#    random['address'] = parameter['location']
-#    random['value'] = random['value'].sample(parameter['value'],1)
-#    print(parameter)
-
-#print(patch)
