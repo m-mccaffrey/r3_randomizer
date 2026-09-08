@@ -9,12 +9,24 @@ from controls import *
 
 DEFAULT_SETTINGS_PATH = 'r3_settings.json'
 TEMPLATE_DIR = 'templates'
+# Roughly ordered from mellow/mainstream to extreme/experimental.
 TEMPLATES = [
     ('Keys', 'keys.json'),
-    ('Industrial', 'industrial.json'),
+    ('Brass', 'brass.json'),
+    ('Funk Clav', 'funkclav.json'),
+    ('Supersaw Lead', 'supersawlead.json'),
     ('Pad / Ambient', 'pad.json'),
+    ('Vaporwave', 'vaporwave.json'),
     ('Bass', 'bass.json'),
+    ('Reese Growl', 'reesegrowl.json'),
+    ('Acid 303', 'acid303.json'),
+    ('Techno Stab', 'technostab.json'),
     ('Percussion / FX Hits', 'percussion.json'),
+    ('Chiptune', 'chiptune.json'),
+    ('Drone', 'drone.json'),
+    ('Industrial', 'industrial.json'),
+    ('Horror Drone', 'horrordrone.json'),
+    ('Noise Wall', 'noisewall.json'),
 ]
 
 # Parameters grouped by function, for the notebook tabs below. Every

@@ -1,0 +1,298 @@
+{
+  "analog": {
+    "max": 3,
+    "min": 0,
+    "type": "slider"
+  },
+  "eg1attack": {
+    "max": 2,
+    "min": 0,
+    "type": "slider"
+  },
+  "eg1decay": {
+    "max": 40,
+    "min": 0,
+    "type": "slider"
+  },
+  "eg1release": {
+    "max": 20,
+    "min": 0,
+    "type": "slider"
+  },
+  "eg1sustain": {
+    "max": 127,
+    "min": 0,
+    "type": "slider"
+  },
+  "eg2attack": {
+    "max": 2,
+    "min": 0,
+    "type": "slider"
+  },
+  "eg2decay": {
+    "max": 40,
+    "min": 0,
+    "type": "slider"
+  },
+  "eg2release": {
+    "max": 20,
+    "min": 0,
+    "type": "slider"
+  },
+  "eg2sustain": {
+    "max": 127,
+    "min": 0,
+    "type": "slider"
+  },
+  "filter1cutoff": {
+    "max": 127,
+    "min": 60,
+    "type": "slider"
+  },
+  "filter1eg1int": {
+    "max": 40,
+    "min": 0,
+    "type": "slider"
+  },
+  "filter1res": {
+    "max": 30,
+    "min": 0,
+    "type": "slider"
+  },
+  "filter2cutoff": {
+    "max": 127,
+    "min": 60,
+    "type": "slider"
+  },
+  "filter2res": {
+    "max": 30,
+    "min": 0,
+    "type": "slider"
+  },
+  "filter2tnr": {
+    "highnibbles": [
+      64
+    ],
+    "lownibbles": [
+      12
+    ],
+    "type": "nibble"
+  },
+  "fx1": {
+    "options": [
+      137,
+      130,
+      128
+    ],
+    "type": "checklist"
+  },
+  "fx2": {
+    "options": [
+      137,
+      130,
+      128
+    ],
+    "type": "checklist"
+  },
+  "lfo1freq": {
+    "max": 127,
+    "min": 40,
+    "type": "slider"
+  },
+  "lfo1wavea": {
+    "options": [
+      1,
+      3
+    ],
+    "type": "checklist"
+  },
+  "noiselevel": {
+    "max": 15,
+    "min": 0,
+    "type": "slider"
+  },
+  "octave": {
+    "max": 11,
+    "min": 8,
+    "type": "slider"
+  },
+  "osc1wave": {
+    "highnibbles": [
+      128
+    ],
+    "lownibbles": [
+      1,
+      0,
+      2
+    ],
+    "type": "nibble"
+  },
+  "osc2wave": {
+    "highnibbles": [
+      0
+    ],
+    "lownibbles": [
+      1,
+      2
+    ],
+    "type": "nibble"
+  },
+  "punch": {
+    "max": 127,
+    "min": 60,
+    "type": "slider"
+  },
+  "timb1osc1level": {
+    "max": 127,
+    "min": 110,
+    "type": "slider"
+  },
+  "timb1osc2level": {
+    "max": 60,
+    "min": 0,
+    "type": "slider"
+  },
+  "unisondetune": {
+    "max": 3,
+    "min": 0,
+    "type": "slider"
+  },
+  "unisonspread": {
+    "max": 10,
+    "min": 0,
+    "type": "slider"
+  },
+  "unisonsw": {
+    "highnibbles": [
+      240
+    ],
+    "lownibbles": [
+      0
+    ],
+    "type": "nibble"
+  },
+  "vibratointensity": {
+    "max": 20,
+    "min": 0,
+    "type": "slider"
+  },
+  "voiceassign": {
+    "options": [
+      48,
+      112,
+      240
+    ],
+    "type": "checklist"
+  },
+  "voicemode": {
+    "options": [
+      0
+    ],
+    "type": "checklist"
+  },
+  "vp1dst": {
+    "options": [
+      3,
+      4,
+      5,
+      7
+    ],
+    "type": "checklist"
+  },
+  "vp1int": {
+    "max": 90,
+    "min": 20,
+    "type": "slider"
+  },
+  "vp2dst": {
+    "options": [
+      3,
+      4,
+      5,
+      7
+    ],
+    "type": "checklist"
+  },
+  "vp2int": {
+    "max": 90,
+    "min": 20,
+    "type": "slider"
+  },
+  "vp3dst": {
+    "options": [
+      3,
+      4,
+      5,
+      7
+    ],
+    "type": "checklist"
+  },
+  "vp3int": {
+    "max": 90,
+    "min": 20,
+    "type": "slider"
+  },
+  "vp4dst": {
+    "options": [
+      3,
+      4,
+      5,
+      7
+    ],
+    "type": "checklist"
+  },
+  "vp4int": {
+    "max": 90,
+    "min": 20,
+    "type": "slider"
+  },
+  "vp5dst": {
+    "options": [
+      3,
+      4,
+      5,
+      7
+    ],
+    "type": "checklist"
+  },
+  "vp5int": {
+    "max": 90,
+    "min": 20,
+    "type": "slider"
+  },
+  "vp6dst": {
+    "options": [
+      3,
+      4,
+      5,
+      7
+    ],
+    "type": "checklist"
+  },
+  "vp6int": {
+    "max": 90,
+    "min": 20,
+    "type": "slider"
+  },
+  "waveshapea": {
+    "highnibbles": [
+      0
+    ],
+    "lownibbles": [
+      0,
+      2
+    ],
+    "type": "nibble"
+  },
+  "waveshapeb": {
+    "options": [
+      0
+    ],
+    "type": "checklist"
+  },
+  "waveshapedepth": {
+    "max": 127,
+    "min": 40,
+    "type": "slider"
+  }
+}
