@@ -42,6 +42,8 @@ class Slider:
         self.label = param.label
         min_pos = min(param.options)
         max_pos = max(param.options)
+        self.floor = min_pos
+        self.ceiling = max_pos
 
         frame = ttk.LabelFrame(parent, text=param.label, padding=(8, 4))
         frame.pack(fill=X, padx=6, pady=4)
@@ -73,6 +75,15 @@ class Slider:
         if self.max_var.get() < self.min_var.get():
             self.min_var.set(self.max_var.get())
         self.param.options = range(self.min_var.get(), self.max_var.get() + 1)
+
+    def set_range(self, min_val, max_val):
+        min_val = max(self.floor, min(int(min_val), self.ceiling))
+        max_val = max(self.floor, min(int(max_val), self.ceiling))
+        if max_val < min_val:
+            min_val, max_val = max_val, min_val
+        self.min_var.set(min_val)
+        self.max_var.set(max_val)
+        self.param.options = range(min_val, max_val + 1)
 
 
 class Check:
@@ -157,3 +168,29 @@ class Checkbank:
         # has to choose from an empty pool.
         if self.bank:
             self.bank[0].set_checked(True)
+
+    def _ensure_one_checked(self, values, box_type):
+        if values:
+            return
+        first = next((box for box in self.bank if box.type == box_type), None)
+        if first is not None:
+            first.set_checked(True)
+
+    def set_selected(self, data):
+        """Apply a saved selection. `data` holds either 'options' (plain
+        checklist banks) or 'highnibbles'/'lownibbles' (nibble banks)."""
+        if self.param.options == ['']:
+            highs = set(data.get('highnibbles', []))
+            lows = set(data.get('lownibbles', []))
+            for box in self.bank:
+                if box.type == 'h':
+                    box.set_checked(box.option in highs)
+                elif box.type == 'l':
+                    box.set_checked(box.option in lows)
+            self._ensure_one_checked(self.highnibbles, 'h')
+            self._ensure_one_checked(self.lownibbles, 'l')
+        else:
+            chosen = set(data.get('options', []))
+            for box in self.bank:
+                box.set_checked(box.option in chosen)
+            self._ensure_one_checked(self.options, 'o')

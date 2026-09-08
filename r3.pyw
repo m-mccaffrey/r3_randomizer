@@ -1,9 +1,13 @@
 from r3patch import *
+import json
 import mmap
+import os
 from shutil import copyfile
-from tkinter import ttk
+from tkinter import ttk, filedialog, messagebox
 
 from controls import *
+
+DEFAULT_SETTINGS_PATH = 'r3_settings.json'
 
 # Parameters grouped by function, for the notebook tabs below. Every
 # non-name Patch parameter must appear in exactly one group.
@@ -222,6 +226,92 @@ def rand_all():
     status_var.set('Saved 128 patches to rand.r3l')
 
 
+def serialize_settings():
+    """Capture the current slider ranges and checkbox selections."""
+    settings = {}
+    for param in gui_patch.parameters:
+        if param.index == 'name':
+            continue
+        if param.control == 'slider':
+            settings[param.index] = {
+                'type': 'slider',
+                'min': min(param.options),
+                'max': max(param.options),
+            }
+        elif param.options == ['']:
+            settings[param.index] = {
+                'type': 'nibble',
+                'highnibbles': list(param.highnibbles),
+                'lownibbles': list(param.lownibbles),
+            }
+        else:
+            settings[param.index] = {
+                'type': 'checklist',
+                'options': list(param.options),
+            }
+    return settings
+
+
+def apply_settings(settings):
+    """Push a loaded settings dict back into the GUI. Returns how many
+    parameters were recognized and applied."""
+    applied = 0
+    for index, data in settings.items():
+        param = params_by_index.get(index)
+        if param is None or not hasattr(param, 'interface'):
+            continue
+        if param.control == 'slider' and data.get('type') == 'slider':
+            param.interface.set_range(data['min'], data['max'])
+            applied += 1
+        elif param.control == 'checkbox' and data.get('type') in ('nibble', 'checklist'):
+            param.interface.set_selected(data)
+            applied += 1
+    return applied
+
+
+settings_path = None
+
+def write_settings_to(path):
+    global settings_path
+    with open(path, 'w') as settings_file:
+        json.dump(serialize_settings(), settings_file, indent=2)
+    settings_path = path
+    status_var.set('Saved settings to ' + os.path.basename(path))
+
+def save_settings_as():
+    path = filedialog.asksaveasfilename(
+        title='Save Randomizer Settings',
+        defaultextension='.json',
+        filetypes=[('JSON files', '*.json'), ('All files', '*.*')],
+        initialfile=os.path.basename(settings_path or DEFAULT_SETTINGS_PATH),
+    )
+    if path:
+        write_settings_to(path)
+
+def save_settings():
+    write_settings_to(settings_path or DEFAULT_SETTINGS_PATH)
+
+def read_settings_from(path):
+    global settings_path
+    try:
+        with open(path) as settings_file:
+            data = json.load(settings_file)
+    except (OSError, ValueError) as error:
+        messagebox.showerror('Load Settings', f'Could not load settings from {path}:\n{error}')
+        return
+    applied = apply_settings(data)
+    settings_path = path
+    status_var.set(f'Loaded {applied} parameter settings from ' + os.path.basename(path))
+
+def load_settings():
+    path = filedialog.askopenfilename(
+        title='Load Randomizer Settings',
+        filetypes=[('JSON files', '*.json'), ('All files', '*.*')],
+    )
+    if path:
+        read_settings_from(path)
+
+
 gui = Tk()
 gui.title('R3 Randomizer')
 gui.geometry('1400x800')
@@ -231,6 +321,21 @@ gui.protocol('WM_DELETE_WINDOW', quit_app)
 style = ttk.Style()
 if 'clam' in style.theme_names():
     style.theme_use('clam')
+
+menubar = Menu(gui)
+file_menu = Menu(menubar, tearoff=0)
+file_menu.add_command(label='Load Settings...', command=load_settings, accelerator='Ctrl+O')
+file_menu.add_command(label='Save Settings', command=save_settings, accelerator='Ctrl+S')
+file_menu.add_command(label='Save Settings As...', command=save_settings_as, accelerator='Ctrl+Shift+S')
+file_menu.add_separator()
+file_menu.add_command(label='Quit', command=quit_app, accelerator='Ctrl+Q')
+menubar.add_cascade(label='File', menu=file_menu)
+gui.config(menu=menubar)
+
+gui.bind_all('<Control-o>', lambda event: load_settings())
+gui.bind_all('<Control-s>', lambda event: save_settings())
+gui.bind_all('<Control-Shift-S>', lambda event: save_settings_as())
+gui.bind_all('<Control-q>', lambda event: quit_app())
 
 nb = ttk.Notebook(gui)
 nb.pack(fill=BOTH, expand=1, padx=8, pady=8)
@@ -279,5 +384,8 @@ ttk.Label(bottom, textvariable=status_var).pack(side=LEFT)
 
 ttk.Button(bottom, text='Quit', command=quit_app).pack(side=RIGHT)
 ttk.Button(bottom, text='Randomize All 128 Patches', command=rand_all).pack(side=RIGHT, padx=(0, 8))
+
+if os.path.exists(DEFAULT_SETTINGS_PATH):
+    read_settings_from(DEFAULT_SETTINGS_PATH)
 
 gui.mainloop()
