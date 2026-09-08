@@ -8,6 +8,14 @@ from tkinter import ttk, filedialog, messagebox
 from controls import *
 
 DEFAULT_SETTINGS_PATH = 'r3_settings.json'
+TEMPLATE_DIR = 'templates'
+TEMPLATES = [
+    ('Keys', 'keys.json'),
+    ('Industrial', 'industrial.json'),
+    ('Pad / Ambient', 'pad.json'),
+    ('Bass', 'bass.json'),
+    ('Percussion / FX Hits', 'percussion.json'),
+]
 
 # Parameters grouped by function, for the notebook tabs below. Every
 # non-name Patch parameter must appear in exactly one group.
@@ -330,6 +338,14 @@ file_menu.add_command(label='Save Settings As...', command=save_settings_as, acc
 file_menu.add_separator()
 file_menu.add_command(label='Quit', command=quit_app, accelerator='Ctrl+Q')
 menubar.add_cascade(label='File', menu=file_menu)
+
+templates_menu = Menu(menubar, tearoff=0)
+for template_label, template_file in TEMPLATES:
+    template_path = os.path.join(TEMPLATE_DIR, template_file)
+    templates_menu.add_command(label=template_label,
+                                command=lambda p=template_path: read_settings_from(p))
+menubar.add_cascade(label='Templates', menu=templates_menu)
+
 gui.config(menu=menubar)
 
 gui.bind_all('<Control-o>', lambda event: load_settings())
