@@ -103,6 +103,10 @@ KEYS = build([
     checklist('lfo2wavea', ['Triangle']),
     checklist('lfo2waveb', ['Wave']),
     slider('lfo2freq', 10, 50),
+    checklist('fx1', ['S.Comp (Stereo Compressor)', 'S.2BndEQ (Stereo 2Band EQ)',
+                       'Reverb', 'S.Chorus (Stereo Chorus)', 'Ensemble', 'S.Delay (Stereo Delay)']),
+    checklist('fx2', ['S.Comp (Stereo Compressor)', 'S.2BndEQ (Stereo 2Band EQ)',
+                       'Reverb', 'S.Chorus (Stereo Chorus)', 'Ensemble', 'S.Delay (Stereo Delay)']),
 ] + [
     checklist(f'vp{n}dst', ['Osc 1 Ctrl 1', 'Osc 1 Level', 'Osc 2 Level', 'Noise Level',
                             'Filter 1 Balance', 'Filter 1 Cutoff'])
@@ -152,6 +156,12 @@ INDUSTRIAL = build([
     checklist('lfo2wavea', ['Square', 'S&H']),
     checklist('lfo2waveb', ['Random']),
     slider('lfo2freq', 60, 127),
+    checklist('fx1', ['Distort (Distortion)', 'S.Dcmtr (Stereo Decimator)', 'S.RingMd (Stereo Ring Modulator)',
+                       'Tube Sim (Tube PreAmp Simulator)', 'GrainSft (Grain Shifter)',
+                       'S.Flangr (Stereo Flanger/Comb Filter)']),
+    checklist('fx2', ['Distort (Distortion)', 'S.Dcmtr (Stereo Decimator)', 'S.RingMd (Stereo Ring Modulator)',
+                       'Tube Sim (Tube PreAmp Simulator)', 'GrainSft (Grain Shifter)',
+                       'S.Flangr (Stereo Flanger/Comb Filter)']),
 ] + [
     slider(f'vp{n}int', 60, 127) for n in range(1, 7)
 ])
@@ -205,6 +215,10 @@ PAD = build([
     checklist('lfo2wavea', ['Triangle']),
     checklist('lfo2waveb', ['Wave']),
     slider('lfo2freq', 0, 20),
+    checklist('fx1', ['Reverb', 'EarlyRef (Early Reflections)', 'S.Chorus (Stereo Chorus)',
+                       'Ensemble', 'S.ModDly (Stereo Modulation Delay)', 'S.Vibart (Stereo Vibrato)']),
+    checklist('fx2', ['Reverb', 'EarlyRef (Early Reflections)', 'S.Chorus (Stereo Chorus)',
+                       'Ensemble', 'S.ModDly (Stereo Modulation Delay)', 'S.Vibart (Stereo Vibrato)']),
 ] + [
     checklist(f'vp{n}dst', ['Osc 1 Level', 'Osc 2 Level', 'Filter 1 Balance', 'Filter 1 Cutoff'])
     for n in range(1, 7)
@@ -261,6 +275,10 @@ BASS = build([
     checklist('lfo2wavea', ['Triangle']),
     checklist('lfo2waveb', ['Wave']),
     slider('lfo2freq', 0, 40),
+    checklist('fx1', ['S.Comp (Stereo Compressor)', 'S.2BndEQ (Stereo 2Band EQ)', 'Distort (Distortion)',
+                       'Tube Sim (Tube PreAmp Simulator)', 'S.Dcmtr (Stereo Decimator)']),
+    checklist('fx2', ['S.Comp (Stereo Compressor)', 'S.2BndEQ (Stereo 2Band EQ)', 'Distort (Distortion)',
+                       'Tube Sim (Tube PreAmp Simulator)', 'S.Dcmtr (Stereo Decimator)']),
 ] + [
     checklist(f'vp{n}dst', ['Osc 1 Ctrl 1', 'Filter 1 Balance', 'Filter 1 Cutoff'])
     for n in range(1, 7)
@@ -311,6 +329,12 @@ PERCUSSION = build([
     slider('eg3release', 0, 30),
     slider('lfo1freq', 60, 127),
     slider('lfo2freq', 60, 127),
+    checklist('fx1', ['PitchSft (Pitch Shifter)', 'GrainSft (Grain Shifter)', 'S.RingMd (Stereo Ring Modulator)',
+                       'S.Dcmtr (Stereo Decimator)', 'S.Gate (Stereo Gate)',
+                       'S.Flangr (Stereo Flanger/Comb Filter)']),
+    checklist('fx2', ['PitchSft (Pitch Shifter)', 'GrainSft (Grain Shifter)', 'S.RingMd (Stereo Ring Modulator)',
+                       'S.Dcmtr (Stereo Decimator)', 'S.Gate (Stereo Gate)',
+                       'S.Flangr (Stereo Flanger/Comb Filter)']),
 ] + [
     slider(f'vp{n}int', 40, 127) for n in range(1, 7)
 ])

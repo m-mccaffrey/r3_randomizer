@@ -103,6 +103,26 @@
     ],
     "type": "nibble"
   },
+  "fx1": {
+    "options": [
+      128,
+      133,
+      134,
+      136,
+      137
+    ],
+    "type": "checklist"
+  },
+  "fx2": {
+    "options": [
+      128,
+      133,
+      134,
+      136,
+      137
+    ],
+    "type": "checklist"
+  },
   "lfo1freq": {
     "max": 40,
     "min": 0,

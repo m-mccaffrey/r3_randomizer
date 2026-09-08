@@ -11,6 +11,49 @@ timbre2 = 228
 # here and repeat every `timbre2` bytes for the second timbre.
 per_timbre_start = 114
 
+# The R3's effect (fx1/fx2) checkbox spans 29 raw values (128-156), but the
+# official Korg R3 Effect Guide documents 30 selectable effect types (see
+# templates/README or the effect guide PDF). This list maps the 29 raw
+# slots to the first 29 of those 30 effects in the guide's own order,
+# leaving out only #30, W.TalkMd (Talking Modulation) - a vocoder-style
+# effect marked "Double Size" (insert effect 1 only) in the guide, which is
+# the most plausible one to be absent from a plain two-slot field. This
+# mapping is inferred from the effect count matching up, not read off the
+# raw MIDI implementation chart, so treat it as a good-faith best guess:
+# it's easy to confirm by picking a single effect here, randomizing, and
+# checking what shows up in the actual R3 Sound Editor.
+fx_type_names = [
+    'S.Comp (Stereo Compressor)',
+    'S.Limit (Stereo Limiter)',
+    'S.Gate (Stereo Gate)',
+    'S.Filter (Stereo Filter)',
+    'S.Wah (Stereo Wah)',
+    'S.2BndEQ (Stereo 2Band EQ)',
+    'Distort (Distortion)',
+    'Cabi Sim (Cabinet Simulator)',
+    'Tube Sim (Tube PreAmp Simulator)',
+    'S.Dcmtr (Stereo Decimator)',
+    'Reverb',
+    'EarlyRef (Early Reflections)',
+    'LCR Dly (L/C/R Delay)',
+    'S.Delay (Stereo Delay)',
+    'AtPanDly (Auto Panning Delay)',
+    'S.APnDly (Stereo Auto Panning Delay)',
+    'ModDelay (Modulation Delay)',
+    'S.ModDly (Stereo Modulation Delay)',
+    'TapeEcho',
+    'S.Chorus (Stereo Chorus)',
+    'Ensemble',
+    'S.Flangr (Stereo Flanger/Comb Filter)',
+    'S.Phaser (Stereo Phaser)',
+    'S.Tremol (Stereo Tremolo)',
+    'S.RingMd (Stereo Ring Modulator)',
+    'PitchSft (Pitch Shifter)',
+    'GrainSft (Grain Shifter)',
+    'S.Vibart (Stereo Vibrato)',
+    'W.RotSpk (Rotary Speaker)',
+]
+
 class Parameter:
     def __init__(self, index, label, control, location, options, length=1, dependency=None,
                  checks=None, highchecks=None, lowchecks=None, highnibbles=None, lownibbles=None, numrows=8):
@@ -159,9 +202,9 @@ class Patch:
                          lownibbles=list(range(0, 4)))
     osc1dwgs = Parameter('osc1dwgs', 'DWGS Type', 'checkbox', 121, list(range(0, 64)), checks=['DWGS ' + str(i) for i in range(0, 64)], highchecks=None,
                          lowchecks=None, highnibbles=None, lownibbles=None, numrows=32)
-    fx1 = Parameter('fx1', 'Effect 1', 'checkbox', 200, list(range(128, 157)), checks=['FX Type ' + str(i) for i in range(0, 29)], highchecks=None, lowchecks=None,
+    fx1 = Parameter('fx1', 'Effect 1', 'checkbox', 200, list(range(128, 157)), checks=list(fx_type_names), highchecks=None, lowchecks=None,
                     highnibbles=None, lownibbles=None, numrows=15)
-    fx2 = Parameter('fx2', 'Effect 2', 'checkbox', 224, list(range(128, 157)), checks=['FX Type ' + str(i) for i in range(0, 29)], highchecks=None, lowchecks=None,
+    fx2 = Parameter('fx2', 'Effect 2', 'checkbox', 224, list(range(128, 157)), checks=list(fx_type_names), highchecks=None, lowchecks=None,
                     highnibbles=None, lownibbles=None, numrows=15)
     vp1src = Parameter('vp1src', 'V. Patch 1 Source', 'checkbox', 182, list(range(0, 8)),
                        checks=['EG1', 'EG2', 'EG3', 'LFO1', 'LFO2', 'Velocity', 'Pitch Bend', 'Mod Wheel'],
