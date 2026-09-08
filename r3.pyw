@@ -180,17 +180,17 @@ f = open('rand.r3l', 'r+b')
 mm = mmap.mmap(f.fileno(), 0)
 
 def save_file():
+    mm.flush()
+    mm.close()
     f.close()
-    exit(0)
+    gui.destroy()
 
 def rand_all():
-    program = [0*i for i in range(128)]
     for n in range(128):
-        program[n] = Patch(n)
-        print(program[n].name.value)
-        for timbre in [1,2]:
-            program[n].randomize()
-            program[n].write(mm, timbre)
+        patch = Patch(n)
+        for timbre in [1, 2]:
+            patch.randomize()
+            patch.write(mm, timbre)
     save_file()
 
 
@@ -208,8 +208,6 @@ nb.pack(fill=BOTH, expand=1)
 gui_patch = Patch(-1)
 slider_cols = []
 slider_frames = []
-sliders_min = []
-sliders_max = []
 slider_frame = Frame(slider_tab)
 label_frames = []
 labels = []
@@ -220,23 +218,14 @@ checkbox_tabs.append(ttk.Frame(nb))
 nb.add(checkbox_tabs[-1], text="Checkboxes " + str(len(checkbox_tabs) - 1))
 
 checkbox_cols = []
-checkbox_frames = []
-checkboxes = []
-num_checkbox_rows = 1
-
-check_vars = []
-max_slide_vars = []
-min_slide_vars = []
 
 slider_sets = []
 checkbanks = []
 
-
 for param in gui_patch.parameters:
 
-
     if param.control == 'slider':
-        if len(slider_frames)%num_slider_rows == 0:
+        if len(slider_frames) % num_slider_rows == 0:
             slider_cols.append(Frame(slider_frame))
 
         pFrames.append(Frame(slider_cols[-1], relief=GROOVE, bd=2))
@@ -259,18 +248,15 @@ for param in gui_patch.parameters:
 
         pFrames[-1].pack()
 
-
     elif param.control == 'checkbox':
         if param.label in ('LFO 1 Wave A', 'DWGS Type', 'Effect 1', 'V. Patch 1 Destination'):
             checkbox_tabs.append(ttk.Frame(nb))
             nb.add(checkbox_tabs[-1], text="Checkboxes " + str(len(checkbox_tabs) - 1))
-        if len(checkbox_frames) % num_checkbox_rows == 0:
-            checkbox_cols.append(Frame(checkbox_tabs[-1], relief=GROOVE, bd=2))
-            checkbanks.append(param.add_checkbank(checkbox_cols[-1]))
-
+        checkbox_cols.append(Frame(checkbox_tabs[-1], relief=GROOVE, bd=2))
+        checkbanks.append(param.add_checkbank(checkbox_cols[-1]))
 
 slider_frame.pack(side=TOP)
-rand_button = Button(gui, text='Randomize', command=lambda: rand_all())
+rand_button = Button(gui, text='Randomize', command=rand_all)
 rand_button.pack(side=BOTTOM)
 
 gui.mainloop()

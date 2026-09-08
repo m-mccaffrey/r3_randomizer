@@ -1,5 +1,4 @@
 from tkinter import *
-import random
 
 class Slider:
     def __init__(self, parent, param):
@@ -43,11 +42,6 @@ class Slider:
             self.min_var.set(self.max_var.get())
         self.param.options = range(self.min_var.get(), self.max_var.get()+1)
 
-
-    def get_random(self):
-        print('yes')
-        return random.sample(range(self.min_var.get(), self.max_var.get()+1), 1)
-
 class Check:
     def __init__(self, option, parent, text, bank, type):
         self.type = type
@@ -74,7 +68,6 @@ class Check:
         if o == []:
             o.append(self.option)
             self.var.set(1)
-        print(o)
 
 class Checkbank:
     def __init__(self, parent, param, numrows):
@@ -107,9 +100,3 @@ class Checkbank:
 
     def addBox(self, box):
         self.bank.append(box)
-
-    def get_random(self):
-        pass
-
-    def update(self):
-        pass
