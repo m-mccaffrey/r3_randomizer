@@ -84,7 +84,7 @@ class Patch:
                            highchecks=None, lowchecks=None, highnibbles=None, lownibbles=None)
     filter1eg1int = Parameter('filter1eg1int', 'Filter 1 EG1 Intensity', 'slider', 133, range(0, 128), checks=None,
                               highchecks=None, lowchecks=None, highnibbles=None, lownibbles=None)
-    filter1velsens = Parameter('filter1velsens', 'Filter 1 Velocity Sencsitivity', 'slider', 135, range(0, 128),
+    filter1velsens = Parameter('filter1velsens', 'Filter 1 Velocity Sensitivity', 'slider', 135, range(0, 128),
                                checks=None, highchecks=None, lowchecks=None, highnibbles=None, lownibbles=None)
     filter2cutoff = Parameter('filter2cutoff', 'Filter 2 Cutoff', 'slider', 136, range(0, 128), checks=None,
                               highchecks=None, lowchecks=None, highnibbles=None, lownibbles=None)
@@ -157,12 +157,12 @@ class Patch:
                          highchecks=['None', 'Ring', 'Sync', 'Ring & Sync'],
                          lowchecks=['Saw', 'Square', 'Triangle', 'Sine'], highnibbles=list(range(0, 64, 16)),
                          lownibbles=list(range(0, 4)))
-    osc1dwgs = Parameter('osc1dwgs', 'DWGS Type', 'checkbox', 121, list(range(0, 64)), checks=[str(i) for i in range(0,64)], highchecks=None,
-                         lowchecks=None, highnibbles=None, lownibbles=None)
-    fx1 = Parameter('fx1', 'Effect 1', 'checkbox', 200, list(range(128, 157)), checks=[str(i) for i in range(0,29)], highchecks=None, lowchecks=None,
-                    highnibbles=None, lownibbles=None)
-    fx2 = Parameter('fx2', 'Effect 2', 'checkbox', 224, list(range(128, 157)), checks=[str(i) for i in range(0,29)], highchecks=None, lowchecks=None,
-                    highnibbles=None, lownibbles=None)
+    osc1dwgs = Parameter('osc1dwgs', 'DWGS Type', 'checkbox', 121, list(range(0, 64)), checks=['DWGS ' + str(i) for i in range(0, 64)], highchecks=None,
+                         lowchecks=None, highnibbles=None, lownibbles=None, numrows=32)
+    fx1 = Parameter('fx1', 'Effect 1', 'checkbox', 200, list(range(128, 157)), checks=['FX Type ' + str(i) for i in range(0, 29)], highchecks=None, lowchecks=None,
+                    highnibbles=None, lownibbles=None, numrows=15)
+    fx2 = Parameter('fx2', 'Effect 2', 'checkbox', 224, list(range(128, 157)), checks=['FX Type ' + str(i) for i in range(0, 29)], highchecks=None, lowchecks=None,
+                    highnibbles=None, lownibbles=None, numrows=15)
     vp1src = Parameter('vp1src', 'V. Patch 1 Source', 'checkbox', 182, list(range(0, 8)),
                        checks=['EG1', 'EG2', 'EG3', 'LFO1', 'LFO2', 'Velocity', 'Pitch Bend', 'Mod Wheel'],
                        highchecks=None, lowchecks=None, highnibbles=None, lownibbles=None)

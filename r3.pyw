@@ -5,6 +5,28 @@ from tkinter import ttk
 
 from controls import *
 
+# Parameters grouped by function, for the notebook tabs below. Every
+# non-name Patch parameter must appear in exactly one group.
+PARAM_GROUPS = [
+    ('Common', ['voicemode', 'octave', 'splitkey', 'unisonsw', 'unisondetune',
+                'unisonspread', 'pitchbendrange', 'voiceassign', 'vibratointensity']),
+    ('Oscillators', ['analog', 'osc1wave', 'osc2wave', 'osc1dwgs', 'osc1lfo1mod',
+                      'timb1osc1level', 'timb1osc2level', 'noiselevel']),
+    ('Filters', ['filter2tnr', 'filter1balance', 'filter1cutoff', 'filter1res',
+                 'filter1eg1int', 'filter1velsens', 'filter2cutoff', 'filter2res',
+                 'filter2eg1int', 'filter2velsens']),
+    ('Amp & Waveshape', ['waveshapea', 'waveshapeb', 'waveshapedepth', 'punch']),
+    ('Envelopes', ['eg1attack', 'eg1decay', 'eg1sustain', 'eg1release', 'eg1velo',
+                   'eg2attack', 'eg2decay', 'eg2sustain', 'eg2release', 'eg2velo',
+                   'eg3attack', 'eg3decay', 'eg3sustain', 'eg3release', 'eg3velo']),
+    ('LFO', ['lfo1wavea', 'lfo1waveb', 'lfo1freq', 'lfo2wavea', 'lfo2waveb', 'lfo2freq']),
+    ('Effects', ['fx1', 'fx2']),
+    ('Virtual Patches', ['vp1src', 'vp2src', 'vp3src', 'vp4src', 'vp5src', 'vp6src',
+                          'vp1dst', 'vp2dst', 'vp3dst', 'vp4dst', 'vp5dst', 'vp6dst',
+                          'vp1int', 'vp2int', 'vp3int', 'vp4int', 'vp5int', 'vp6int']),
+]
+SLIDER_COLUMNS = 2
+
 ''' 
 510p starts patch (byte 0), preamble is 32 bytes
 
@@ -179,84 +201,83 @@ copyfile('init.r3l', 'rand.r3l')
 f = open('rand.r3l', 'r+b')
 mm = mmap.mmap(f.fileno(), 0)
 
-def save_file():
+def close_resources():
     mm.flush()
     mm.close()
     f.close()
+
+def quit_app():
+    close_resources()
     gui.destroy()
 
 def rand_all():
+    status_var.set('Randomizing...')
+    gui.update_idletasks()
     for n in range(128):
         patch = Patch(n)
         for timbre in [1, 2]:
             patch.randomize()
             patch.write(mm, timbre)
-    save_file()
+    mm.flush()
+    status_var.set('Saved 128 patches to rand.r3l')
 
 
 gui = Tk()
-gui.geometry('1300x750')
 gui.title('R3 Randomizer')
+gui.geometry('1400x800')
+gui.minsize(900, 600)
+gui.protocol('WM_DELETE_WINDOW', quit_app)
+
+style = ttk.Style()
+if 'clam' in style.theme_names():
+    style.theme_use('clam')
 
 nb = ttk.Notebook(gui)
-slider_tab = ttk.Frame(nb)
-checkbox_tabs = []
-
-nb.add(slider_tab, text="Sliders")
-nb.pack(fill=BOTH, expand=1)
+nb.pack(fill=BOTH, expand=1, padx=8, pady=8)
 
 gui_patch = Patch(-1)
-slider_cols = []
-slider_frames = []
-slider_frame = Frame(slider_tab)
-label_frames = []
-labels = []
-pFrames = []
-num_slider_rows = 12
+params_by_index = {param.index: param for param in gui_patch.parameters}
 
-checkbox_tabs.append(ttk.Frame(nb))
-nb.add(checkbox_tabs[-1], text="Checkboxes " + str(len(checkbox_tabs) - 1))
+grouped_indexes = [name for _, names in PARAM_GROUPS for name in names]
+all_indexes = [param.index for param in gui_patch.parameters if param.index != 'name']
+if sorted(grouped_indexes) != sorted(all_indexes):
+    missing = set(all_indexes) - set(grouped_indexes)
+    extra = set(grouped_indexes) - set(all_indexes)
+    raise RuntimeError(f'PARAM_GROUPS out of sync with Patch.parameters: missing={missing} extra={extra}')
 
-checkbox_cols = []
+for group_name, param_names in PARAM_GROUPS:
+    tab = ttk.Frame(nb)
+    nb.add(tab, text=group_name)
 
-slider_sets = []
-checkbanks = []
+    scroll = ScrollableFrame(tab)
+    scroll.pack(fill=BOTH, expand=1)
 
-for param in gui_patch.parameters:
+    group_params = [params_by_index[name] for name in param_names]
+    sliders = [param for param in group_params if param.control == 'slider']
+    checkboxes = [param for param in group_params if param.control == 'checkbox']
 
-    if param.control == 'slider':
-        if len(slider_frames) % num_slider_rows == 0:
-            slider_cols.append(Frame(slider_frame))
+    if sliders:
+        slider_area = ttk.Frame(scroll.body)
+        slider_area.pack(fill=X, anchor=N)
+        slider_cols = [ttk.Frame(slider_area) for _ in range(SLIDER_COLUMNS)]
+        for col in slider_cols:
+            col.pack(side=LEFT, anchor=N, fill=BOTH, expand=1)
+        for i, param in enumerate(sliders):
+            param.add_slider(slider_cols[i % SLIDER_COLUMNS])
 
-        pFrames.append(Frame(slider_cols[-1], relief=GROOVE, bd=2))
+    if checkboxes:
+        checkbox_area = ttk.Frame(scroll.body)
+        checkbox_area.pack(fill=X, anchor=N)
+        for param in checkboxes:
+            param.add_checkbank(checkbox_area)
 
-        slider_frames.append(Frame(pFrames[-1]))
+bottom = ttk.Frame(gui)
+bottom.pack(fill=X, padx=8, pady=(0, 8))
 
-        slider_sets.append(param.add_slider(slider_frames[-1]))
+status_var = StringVar(value='Ready')
+ttk.Label(bottom, textvariable=status_var).pack(side=LEFT)
 
-        label_frames.append(Frame(pFrames[-1]))
-
-        labels.append(Label(label_frames[-1], text=param.label))
-
-        slider_frames[-1].pack(side=TOP)
-
-        label_frames[-1].pack(side=TOP)
-
-        labels[-1].pack(side=TOP)
-
-        slider_cols[-1].pack(side=LEFT)
-
-        pFrames[-1].pack()
-
-    elif param.control == 'checkbox':
-        if param.label in ('LFO 1 Wave A', 'DWGS Type', 'Effect 1', 'V. Patch 1 Destination'):
-            checkbox_tabs.append(ttk.Frame(nb))
-            nb.add(checkbox_tabs[-1], text="Checkboxes " + str(len(checkbox_tabs) - 1))
-        checkbox_cols.append(Frame(checkbox_tabs[-1], relief=GROOVE, bd=2))
-        checkbanks.append(param.add_checkbank(checkbox_cols[-1]))
-
-slider_frame.pack(side=TOP)
-rand_button = Button(gui, text='Randomize', command=rand_all)
-rand_button.pack(side=BOTTOM)
+ttk.Button(bottom, text='Quit', command=quit_app).pack(side=RIGHT)
+ttk.Button(bottom, text='Randomize All 128 Patches', command=rand_all).pack(side=RIGHT, padx=(0, 8))
 
 gui.mainloop()
